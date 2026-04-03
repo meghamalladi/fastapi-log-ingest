@@ -1,0 +1,5 @@
+.env
+__pycache__/ #Python compiled files
+venv/		#virtual environment
+*.pyc	# Compiled python
+.vscode	#Editor settings
