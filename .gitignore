@@ -3,3 +3,4 @@ __pycache__/ #Python compiled files
 venv/		#virtual environment
 *.pyc	# Compiled python
 .vscode	#Editor settings
+To-do.txt # things to do for this project
