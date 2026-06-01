@@ -2,9 +2,11 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-# Don't need load_dotenv if we are using .env information in the docker-compose yml file.
+# We don't need load_dotenv if we are running Docker. We use .env information in the docker-compose yml file.
+# Use the function only if we are not using docker for any reason
 #from dotenv import load_dotenv
-#load_dotenv()
+#load_dotenv("../.env")
+
 from database import LogRecord
 from server_h import lifespan, get_db, load_dependency
 from validation_class import User_log

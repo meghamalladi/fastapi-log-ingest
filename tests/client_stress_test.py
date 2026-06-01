@@ -2,8 +2,6 @@ import httpx
 import asyncio
 import time
 import os
-import sys
-from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -39,22 +37,23 @@ async def post_log(client, t_id):
             return INTERNAL_ERR
     return -1
 
-# We need a cleanup method for cleaning up the test logs.
-# I am using a sync method here to make sure that the clenaup happens
-#   before we more on to the test.
-def cleanup_sync():
-    db_url = os.getenv("DATABASE_SYNC_URL")
-    try:
-        engine = create_engine(db_url)
-        with engine.begin() as conn:
-            result = conn.execute(text("DELETE FROM logs WHERE ldb_cl_name LIKE 'Stress_test_%'"))
-            print(f"{result.rowcount} stress test records deleted from DB")
-    except Exception as e:
-        print(f"Could not cleanup the test logs.")
-        print(f"Error Type: {type(e).__name__} - {e}")
-        sys.exit(1)
-
-
+async def cleanup():
+    async with httpx.AsyncClient() as client:
+        try:
+            server_url = os.getenv("SERVER_URL")
+            secret_token = os.getenv("TEST_CLEANUP_TOKEN")
+            headers = {"in-token":secret_token}
+            res = await client.post(f"{server_url}/app/cleanup", headers = headers)
+            if res.status_code == 200:
+                print("Database cleared of test logs successfully!")
+            return res.status_code
+        except httpx.ConnectError:
+            print("Connection failed: Please ensure that the server is running.")
+            return CONN_FAILED
+        except Exception as e:
+                msg = f"Error Type: {type(e).__name__} - {e}"
+                print(msg, "Couldn't erase DB test logs")
+                return INTERNAL_ERR
 async def start_stress_test():
 
     print("Stress test begins..")
@@ -93,14 +92,11 @@ async def start_stress_test():
     
     print("Stress test ends here...")
     
+    # Cleanup all the test entries. 
+    await cleanup()   
 
 if __name__ == "__main__":
-
-    # Cleanup to start with a clean slate
-    #cleanup_sync()
 
     # Create http async client pipeline and then pool of worker threads
     asyncio.run(start_stress_test())
 
-    # Cleanup all the test entries. 
-    cleanup_sync()

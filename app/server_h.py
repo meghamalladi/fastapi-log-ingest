@@ -2,7 +2,7 @@ import os, sys
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from fastapi import FastAPI
+from fastapi import FastAPI,Depends
 from fastapi.exceptions import RequestValidationError
 from errors import log_validation_exc_handler
 from database import Base
@@ -58,6 +58,10 @@ async def lifespan(app: FastAPI):
 def load_dependency(app:FastAPI):
     # Add all required handlers
     app.add_exception_handler(RequestValidationError, log_validation_exc_handler)
+
+    if os.getenv("APP_ENV")=="testing":
+        from testing_route import test_router
+        app.include_router(test_router)
     
 
 # Database session dependency for all the webrequests that require it.

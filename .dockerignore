@@ -1,4 +1,5 @@
 .env
+lis.pem
 .git
 .venv
 __pycache__

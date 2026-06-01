@@ -4,7 +4,9 @@ venv/		#virtual environment
 *.pyc	# Compiled python
 .vscode	#Editor settings
 To-do.txt # things to do for this project
-.DS_Store
+app/.DS_Store
 Observations
 To-do.txt
 complications
+lis.pem
+.DS_Store
