@@ -15,7 +15,7 @@ INTERNAL_ERR = 500
 
 async def post_log(client, t_id):
     test_data = {
-        "usr_cl_name": f"Stress_test_client{t_id}",
+        "usr_cl_name": f"Testing_client_stress{t_id}",
         "usr_level": "LOG",
         "usr_msg": f"Stress test msg {t_id} "
     }

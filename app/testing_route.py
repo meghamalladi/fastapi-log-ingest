@@ -19,7 +19,7 @@ async def cleanup_test_logs(in_token:str = Header(...), db:AsyncSession= Depends
             detail="Unauthorized cleanup requested."
         )
     try:
-        await db.execute(text("DELETE FROM logs WHERE ldb_cl_name LIKE 'Stress_test_%'"))
+        await db.execute(text("DELETE FROM logs WHERE ldb_cl_name LIKE 'Testing_%'"))
         await db.commit()
     except Exception as e:
         print(f"Failed to add entry into the Database. Error Type: {type(e).__name__} - {e}")
