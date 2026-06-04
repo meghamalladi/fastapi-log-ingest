@@ -1,5 +1,6 @@
 .env
 lis.pem
+app/.DS_Store
 .git
 .venv
 __pycache__

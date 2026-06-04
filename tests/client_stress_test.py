@@ -2,11 +2,12 @@ import httpx
 import asyncio
 import time
 import os
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
 
-TOTAL_REQUESTS = 500
-TASK_LIMIT = 50
+TOTAL_REQUESTS = 20
+TASK_LIMIT = 200
 
 #ERRORS
 SUCCESS = 200
@@ -17,7 +18,8 @@ async def post_log(client, t_id):
     test_data = {
         "usr_cl_name": f"Testing_client_stress{t_id}",
         "usr_level": "LOG",
-        "usr_msg": f"Stress test msg {t_id} "
+        "usr_msg": f"Stress test msg {t_id}",
+        "usr_cl_ts": datetime.now(timezone.utc).isoformat()
     }
     try:
         server_url = os.getenv("SERVER_URL")
@@ -83,7 +85,7 @@ async def start_stress_test():
 
     print(f"Total time taken ={duration} seconds")
     print(f"Average requests per second = {rps}")
-    print(f"Number of succesful requests = {success}")
+    print(f"Number of successful requests = {success}")
     print(f"Number of failed requests = {errors}. Examples are as follows:")
 
     for i in range(res_len):
@@ -92,8 +94,8 @@ async def start_stress_test():
     
     print("Stress test ends here...")
     
-    # Cleanup all the test entries. 
-    await cleanup()   
+    # Cleanup all the test entries after your job is done. 
+    #await cleanup()
 
 if __name__ == "__main__":
 

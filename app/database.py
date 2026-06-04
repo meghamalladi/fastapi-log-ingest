@@ -11,8 +11,8 @@ class LogRecord(Base):
     ldb_id = Column(Integer, primary_key = True, index=True, autoincrement=True)
     ldb_cl_name = Column(String, index=True)
     ldb_level = Column(String)
-    ldb_cl_ts = Column(DateTime)
-    ldb_ts = Column(DateTime, server_default=func.now(), index=True)
+    ldb_cl_ts = Column(DateTime(timezone=True))
+    ldb_ts = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     ldb_msg = Column(String)
 
 

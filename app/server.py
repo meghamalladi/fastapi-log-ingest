@@ -10,7 +10,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import LogRecord
 from server_h import lifespan, get_db, load_dependency
 from validation_class import User_log
-from datetime import datetime
 from errors import handle_errors
 
 
@@ -35,16 +34,13 @@ def init():
 # We need database operation in this case; Hence the async method.
 @app.post("/ingest")
 async def ingest(inlog:User_log, db:AsyncSession = Depends(get_db)):
-    curr_time = datetime.now()
     new_entry = LogRecord()
     
     # Copy new values to the new entry
     new_entry.ldb_cl_name = inlog.usr_cl_name
     new_entry.ldb_level = inlog.usr_level
-    new_entry.ldb_cl_ts = curr_time
+    new_entry.ldb_cl_ts = inlog.usr_cl_ts
     new_entry.ldb_msg = inlog.usr_msg
-
-    print(inlog.usr_cl_name,inlog.usr_level, curr_time, inlog.usr_msg)
 
     try:
         db.add(new_entry)
@@ -54,6 +50,6 @@ async def ingest(inlog:User_log, db:AsyncSession = Depends(get_db)):
         print(f"Failed to add entry into the Database. Error Type: {type(e).__name__} - {e}")
         handle_errors(e)
         
-    print(f"Data entry added. id: {new_entry.ldb_cl_name}")
+    print(f"Data entry added. id: {inlog.usr_cl_name}, request time: {inlog.usr_cl_ts}")
     return {"status": "Success. Data has been ingested."} 
 

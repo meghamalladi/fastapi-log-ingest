@@ -2,6 +2,7 @@ import httpx
 import asyncio
 import time
 import os
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
 import traceback
@@ -28,17 +29,21 @@ def toggle_db(cmd = "stop"):
 async def call_app(msg, col_change=False):
     res = ""
     client_name = f"Testing_validation"
+    time = datetime.now(timezone.utc).isoformat()
 
     test_data = {
         "usr_cl_name": client_name,
         "usr_level": "LOG",
-        "usr_msg": msg
+        "usr_msg": msg,
+        "usr_cl_ts": time
+
     }
     if col_change:
         test_data = {
             "cl_name": client_name,
             "usr_level": "LOG",
-            "usr_msg": msg
+            "usr_msg": msg,
+            "usr_cl_ts": time
         }   
     async with httpx.AsyncClient() as client:
         try:
