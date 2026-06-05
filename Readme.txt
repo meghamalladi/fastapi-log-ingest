@@ -2,7 +2,8 @@ I have created a fastapi app that injests logs from clients and stores them in t
 Stage1: I have used the database on my local machine, and both the server and client
     on my local system. 
 Stage 2: I have containerized my application.
-Stage 3- To do: I have to connect the application to the cloud
+Stage 3- Deployed the application on AWS cloud EC2 instance
+Stage 4- to do: Decouple the architecture by making use of RedPanda/Kafka messaging systems
 
 Current modules needed and versions:
 python: 3.9.6

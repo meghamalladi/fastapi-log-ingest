@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
 
-TOTAL_REQUESTS = 20
+TOTAL_REQUESTS = 20000
 TASK_LIMIT = 200
 
 #ERRORS
@@ -34,7 +34,7 @@ async def post_log(client, t_id):
         print("Connection failed: Please ensure that the server is running.")
         return CONN_FAILED
     except Exception as e:
-            msg = f"Error Type: {type(e).__name__} - {e}"
+            msg = f"Error Type: {type(e).__name__} - {e}, {test_data['usr_cl_name']}, {test_data['usr_cl_ts']}"
             print(msg)
             return INTERNAL_ERR
     return -1
@@ -86,12 +86,13 @@ async def start_stress_test():
     print(f"Total time taken ={duration} seconds")
     print(f"Average requests per second = {rps}")
     print(f"Number of successful requests = {success}")
-    print(f"Number of failed requests = {errors}. Examples are as follows:")
+    print(f"Number of errors = {errors}.")
 
+    res_arr = []
     for i in range(res_len):
-        if res[i] != 200:
-            print(res[i])
-    
+        if res[i] != SUCCESS:
+            res_arr.append(res[i])
+    print(res_arr)
     print("Stress test ends here...")
     
     # Cleanup all the test entries after your job is done. 
